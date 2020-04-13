@@ -1,5 +1,5 @@
 import { h, render, Fragment } from "preact";
-import { ServerProvider, PeerProvider, useServer, usePeer } from "./context";
+import { ServerProvider, PeerProvider } from "./context";
 import { Server } from "./server";
 import { Peer } from "./peer";
 

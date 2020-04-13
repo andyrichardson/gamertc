@@ -1,8 +1,8 @@
 import { h, Fragment } from "preact";
-import { useState, useCallback } from "preact/hooks/src";
+import { useState, useCallback } from "preact/hooks";
 import { usePeer } from "../context";
 
-const Peer = () => {
+export const Peer = () => {
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const { connect, connected } = usePeer();

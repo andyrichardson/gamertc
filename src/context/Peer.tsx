@@ -6,7 +6,6 @@ import {
   useState,
   useCallback,
   useContext,
-  useMemo,
 } from "preact/hooks";
 
 interface PeerContextValue {

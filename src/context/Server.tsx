@@ -6,7 +6,8 @@ import {
   useCallback,
   useEffect,
   useMemo,
-} from "preact/hooks/src";
+  useRef,
+} from "preact/hooks";
 
 interface ServerContextValue {
   /** Unique ID of server. */
