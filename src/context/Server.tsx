@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
 } from "preact/hooks";
+import chance from "chance";
 
 interface ServerContextValue {
   /** Unique ID of server. */
@@ -25,7 +26,7 @@ export const useServer = () => useContext(ServerContext);
 export const ServerProvider: FunctionComponent = ({ children }) => {
   // Root app state
   const [state, setState] = useState({
-    id: "some-id",
+    id: chance.Chance().word({ length: 7 }),
     connected: false,
   });
 
@@ -35,16 +36,16 @@ export const ServerProvider: FunctionComponent = ({ children }) => {
   >({});
 
   // Own peer
-  const peer = useRef(
-    new Peer(state.id, {
-      host: "127.0.0.1",
-      port: 4000,
-      path: "/",
-    })
-  );
+  const peer = useRef<Peer>();
 
   const setup = useCallback(async () => {
-    const p = peer.current;
+    const p = new Peer(state.id, {
+      debug: 3,
+      host: process.env.SIGNAL_HOST,
+      port: Number(process.env.SIGNAL_PORT),
+      path: process.env.SIGNAL_PATH,
+    });
+    peer.current = p;
 
     // Connection to signalling server
     p.on("open", () => {
@@ -56,6 +57,7 @@ export const ServerProvider: FunctionComponent = ({ children }) => {
 
     // Connection from user
     p.on("connection", (connection) => {
+      console.log(connection);
       setConnections((connections) => ({
         ...connections,
         [connection.peer]: connection,
@@ -77,7 +79,10 @@ export const ServerProvider: FunctionComponent = ({ children }) => {
 
   useEffect(() => {
     setup();
-    return () => Object.values(connections).forEach((c) => c.close());
+    return () => {
+      Object.values(connections).forEach((c) => c.close());
+      () => peer.current?.disconnect();
+    };
   }, []);
 
   const value = useMemo(

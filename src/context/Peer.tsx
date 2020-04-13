@@ -31,9 +31,10 @@ export const PeerProvider: FunctionComponent = ({ children }) => {
       }
 
       const p = new Peer(name, {
-        host: "127.0.0.1",
-        port: 4000,
-        path: "/",
+        debug: 3,
+        host: process.env.SIGNAL_HOST,
+        port: Number(process.env.SIGNAL_PORT),
+        path: process.env.SIGNAL_PATH,
       });
       peer.current = p;
 
