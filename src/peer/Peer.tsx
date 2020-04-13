@@ -12,10 +12,9 @@ export const Peer = () => {
     setName(e.currentTarget.value);
   }, []);
 
-  const handleIdChange = useCallback(
-    (e: any) => setId(e.currentTarget.value),
-    []
-  );
+  const handleIdChange = useCallback((e: any) => {
+    setId(e.currentTarget.value);
+  }, []);
 
   useEffect(() => {
     if (id !== "") {
@@ -32,8 +31,10 @@ export const Peer = () => {
   }, [id, window.location.search]);
 
   const handleConnect = useCallback(() => {
+    window.history.pushState(null, null, `/join?id=${id}`);
     window.localStorage.setItem("name", name);
-    connect({ name, id });
+
+    setTimeout(() => connect({ name, id }), 300);
   }, [name, id, connect]);
 
   return (

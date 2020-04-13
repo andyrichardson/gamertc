@@ -38,24 +38,23 @@ export const PeerProvider: FunctionComponent = ({ children }) => {
       });
       peer.current = p;
 
-      // Peer connected to signalling server
-      p.on("open", () => {
+      // Disconnected from signalling server
+      p.on("disconnected", () => {
         setState((s) => ({
           ...s,
-          connected: true,
+          connected: false,
         }));
-      });
-
-      p.on("connection", () => {
-        console.log("CONNECTION");
       });
 
       const c = p.connect(id);
       connection.current = c;
-      c.on("open", function () {
-        console.log("OPENED");
-        // here you have conn.id
-        c.send("hi!");
+
+      // Connected to game server
+      c.on("open", () => {
+        setState((s) => ({
+          ...s,
+          connected: true,
+        }));
       });
       c.on("data", function (data) {
         // Will print 'hi!'
